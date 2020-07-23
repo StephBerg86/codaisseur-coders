@@ -3,7 +3,7 @@ const initialState = {
   accessToken: null,
 };
 
-export default function feedSliceReducer(state = initialState, action) {
+export default function userSliceReducer(state = initialState, action) {
   switch (action.type) {
     case "USER_LOGGEDIN": {
       return {
@@ -12,7 +12,8 @@ export default function feedSliceReducer(state = initialState, action) {
         accessToken: action.payload,
       };
     }
-    default:
-      state;
+    default: {
+      return state;
+    }
   }
 }

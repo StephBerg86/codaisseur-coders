@@ -1,13 +1,6 @@
 import API_URL from "../.././config";
 import axios from "axios";
 
-// function authLogin(token) {
-//   return {
-//     type: "AUTHENTICATED",
-//     payload: token,
-//   };
-// }
-
 function userLoggedIn(token, profile) {
   return {
     type: "USER_LOGGEDIN",
@@ -27,7 +20,7 @@ export function login(email, password) {
         password: password,
       });
       const token = response.data.jwt;
-      console.log(response.data.jwt);
+      console.log("hier?", response);
       dispatch(userLoggedIn(token));
 
       const res = await axios.get(`${API_URL}/me`, {
@@ -37,6 +30,10 @@ export function login(email, password) {
       });
       console.log("res.data", res.data);
       dispatch(userLoggedIn(res.data));
+
+      //it saves the access token to local storage.
+      const stringToken = JSON.stringify(token);
+      localStorage.setItem("token", stringToken);
     } catch (error) {
       console.log(error);
     }
