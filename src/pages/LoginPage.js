@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "../store/auth/actions";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -16,31 +18,32 @@ export default function LoginPage() {
   return (
     <div>
       <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <p>
-          <label>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="formEmail">
+          <Form.Label>
             Email:{" "}
-            <input
+            <Form.Control
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-          </label>
-        </p>
-        <p>
-          <label>
+          </Form.Label>
+        </Form.Group>
+
+        <Form.Group controlId="formPassword">
+          <Form.Label>
             Password:{" "}
-            <input
+            <Form.Control
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-          </label>
-        </p>
+          </Form.Label>
+        </Form.Group>
         <p>
-          <button type="submit">Login</button>
+          <Button type="submit">Login</Button>
         </p>
-      </form>
+      </Form>
     </div>
   );
 }
