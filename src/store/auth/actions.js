@@ -10,10 +10,7 @@ function userLoggedIn(token, profile) {
 }
 
 export function login(email, password) {
-  // Return the thunk itself, i.e. a function
   return async function thunk(dispatch, getState) {
-    // TODO:
-    // make a POST API request to `/login`
     try {
       const response = await axios.post(`${API_URL}/login`, {
         email: email,
@@ -23,19 +20,48 @@ export function login(email, password) {
       console.log("hier?", response);
       dispatch(userLoggedIn(token));
 
-      const res = await axios.get(`${API_URL}/me`, {
+      const getUser = await axios.get(`${API_URL}/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("res.data", res.data);
-      dispatch(userLoggedIn(res.data));
+      console.log("res.data", getUser.data);
+      dispatch(userLoggedIn(getUser.data));
 
-      //it saves the access token to local storage.
-      const stringToken = JSON.stringify(token);
-      localStorage.setItem("token", stringToken);
+      //save the access token to local storage.
+      localStorage.setItem("token", token);
+      console.log(localStorage);
     } catch (error) {
       console.log(error);
     }
   };
+}
+
+export async function bootstrapLoginState(dispatch, getState) {
+  try {
+    // Checks whether an access token exists in local storage.
+    const getToken = localStorage.getItem("token");
+    console.log(getToken);
+    if (getToken === null) {
+      return;
+    }
+    // If so, makes a GET API request to /me to get the user's profile, sending along the access token.
+    const getUser = await axios.get(`${API_URL}/me`, {
+      headers: {
+        Authorization: `Bearer ${getToken}`,
+      },
+    });
+    console.log("get user", getUser);
+    // If the profile request succeeds, the thunk dispatches the userLoggedIn action.
+    dispatch(userLoggedIn(getUser.data));
+
+    localStorage.getItem("token");
+  } catch (error) {
+    console.log("test error", error);
+  }
+}
+
+export function logout(dispatch, getState) {
+  dispatch({ type: "USER_LOGOUT" });
+  localStorage.removeItem("token");
 }
